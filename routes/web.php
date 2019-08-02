@@ -16,6 +16,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Route::prefix('blog')->group(function () {
+    Route::get('/', 'Blog\Controller@index')->name('blog.home');
+    Route::get('{slug}', 'Blog\PostController@show')->name('blog.detail');
+});
 
 Route::get('/home', 'HomeController@index')->name('home');
