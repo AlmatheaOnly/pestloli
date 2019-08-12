@@ -1,4 +1,4 @@
-@extends('admin.layouts.dashboard')
+@extends('admin.blog.layouts.dashboard')
 
 @section('content')
     <div class="container">
@@ -8,7 +8,7 @@
                     <div class="card-header">用户登录</div>
                     <div class="card-body">
 
-                        @include('admin.partials.errors')
+                        @include('admin.blog.partials.errors')
 
                         <form role="form" method="POST" action="{{ url('admin/login') }}">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">

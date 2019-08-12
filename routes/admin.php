@@ -22,12 +22,20 @@ Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 
-
 Route::middleware('admin:admin')->group(function () {
-    Route::prefix('blog')->group(function () {
-        Route::resource('post', 'PostController');
+    Route::prefix('blog')->namespace('Blog')->group(function () {
+
+        //
+        Route::resource('post', 'PostController', ['except' => 'show']);
         Route::resource('tag', 'TagController');
-        Route::resource('upload', 'UploadController');
+        Route::resource('upload', 'UploadController', ['only' => 'index']);
+
+
+        //文件操作
+        Route::post('upload/file', 'UploadController@uploadFile');
+        Route::delete('upload/file', 'UploadController@deleteFile');
+        Route::post('upload/folder', 'UploadController@createFolder');
+        Route::delete('upload/folder', 'UploadController@deleteFolder');
     });
 });
 
