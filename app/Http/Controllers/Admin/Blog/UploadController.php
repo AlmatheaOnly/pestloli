@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\UploadsManagerService;
 use Illuminate\Support\Facades\File;
+use App\Http\Requests\Blog\UploadFileRequest;
+use App\Http\Requests\Blog\UploadNewFolderRequest;
 
 class UploadController extends Controller
 {
@@ -33,7 +35,7 @@ class UploadController extends Controller
     /**
      * 创建新目录
      */
-    public function createFolder(Request $request)
+    public function createFolder(UploadNewFolderRequest  $request)
     {
         $new_folder = $request->get('new_folder');
         $folder = $request->get('folder') . '/' . $new_folder;
@@ -98,7 +100,7 @@ class UploadController extends Controller
     /**
      * 上传文件
      */
-    public function uploadFile(Request $request)
+    public function uploadFile(UploadFileRequest  $request)
     {
         $file = $_FILES['file'];
         $fileName = $request->get('file_name');

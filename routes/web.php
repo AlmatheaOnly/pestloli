@@ -15,3 +15,6 @@ Route::prefix('blog')->group(function () {
     Route::get('/', 'Blog\Controller@index')->name('blog.home');
     Route::get('{slug}', 'Blog\PostController@show')->name('blog.detail');
 });
+Route::get('/',function(){
+    return view('welcome');
+});

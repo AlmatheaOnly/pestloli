@@ -23,7 +23,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 
 Route::middleware('admin:admin')->group(function () {
-    Route::prefix('blog')->namespace('Blog')->group(function () {
+    Route::prefix('blog')->namespace('Blog')->name('blog.')->group(function () {
 
         //
         Route::resource('post', 'PostController', ['except' => 'show']);
@@ -37,5 +37,6 @@ Route::middleware('admin:admin')->group(function () {
         Route::post('upload/folder', 'UploadController@createFolder');
         Route::delete('upload/folder', 'UploadController@deleteFolder');
     });
+
 });
 

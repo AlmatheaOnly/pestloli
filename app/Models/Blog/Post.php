@@ -3,6 +3,7 @@
 namespace App\Models\Blog;
 
 use Illuminate\Database\Eloquent\Model;
+use \App\Services\MarkdownerService;
 
 /**
  * App\Models\Blog\Post
@@ -31,7 +32,76 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     //
-    public function tag(){
-        return $this->belongsToMany('Tag::class', 'tag_post_pivots');
+    protected $dates = ['published_at'];
+    protected $fillable = [
+        'title', 'subtitle', 'content_raw', 'page_image', 'meta_description','layout', 'is_draft', 'published_at',
+    ];
+
+    public function tags(){
+        return $this->belongsToMany(Tag::class, 'tag_post_pivots');
+    }
+
+
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = $value;
+
+        if (!$this->exists) {
+            $value = uniqid(str_random(8));
+            $this->setUniqueSlug($value, 0);
+        }
+    }
+
+    protected function setUniqueSlug($title, $extra)
+    {
+        $slug = str_slug($title . '-' . $extra);
+
+        if (static::where('slug', $slug)->exists()) {
+            $this->setUniqueSlug($title, $extra + 1);
+            return;
+        }
+
+        $this->attributes['slug'] = $slug;
+    }
+
+    /**
+     * Set the HTML content automatically when the raw content is set
+     *
+     * @param string $value
+     */
+    public function setContentRawAttribute($value)
+    {
+        $markdown = new MarkdownerService();
+
+        $this->attributes['content_raw'] = $value;
+        $this->attributes['content_html'] = $markdown->toHTML($value);
+    }
+
+
+
+// 然后在 Post 模型类中添加如下几个方法
+
+    /**
+     * 返回 published_at 字段的日期部分
+     */
+    public function getPublishDateAttribute($value)
+    {
+        return $this->published_at->format('Y-m-d');
+    }
+
+    /**
+     * 返回 published_at 字段的时间部分
+     */
+    public function getPublishTimeAttribute($value)
+    {
+        return $this->published_at->format('g:i A');
+    }
+
+    /**
+     * content_raw 字段别名
+     */
+    public function getContentAttribute($value)
+    {
+        return $this->content_raw;
     }
 }
