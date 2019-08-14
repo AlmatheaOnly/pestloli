@@ -4,6 +4,7 @@ namespace App\Models\Blog;
 
 use Illuminate\Database\Eloquent\Model;
 use \App\Services\MarkdownerService;
+use Carbon\Carbon;
 
 /**
  * App\Models\Blog\Post
@@ -104,4 +105,43 @@ class Post extends Model
     {
         return $this->content_raw;
     }
+
+    public function newerPost(Tag $tag = null)
+    {
+        $query =
+            static::where('published_at', '>', $this->published_at)
+                ->where('published_at', '<=', Carbon::now())
+                ->where('is_draft', 0)
+                ->orderBy('published_at', 'asc');
+        if ($tag) {
+            $query = $query->whereHas('tags', function ($q) use ($tag) {
+                $q->where('tag', '=', $tag->tag);
+            });
+        }
+
+        return $query->first();
+    }
+
+    /**
+     * Return older post before this one or null
+     *
+     * @param Tag $tag
+     * @return Post
+     */
+    public function olderPost(Tag $tag = null)
+    {
+        $query =
+            static::where('published_at', '<', $this->published_at)
+                ->where('is_draft', 0)
+                ->orderBy('published_at', 'desc');
+        if ($tag) {
+            $query = $query->whereHas('tags', function ($q) use ($tag) {
+                $q->where('tag', '=', $tag->tag);
+            });
+        }
+
+        return $query->first();
+    }
+
+
 }

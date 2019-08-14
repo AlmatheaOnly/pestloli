@@ -26,7 +26,7 @@ Route::middleware('admin:admin')->group(function () {
     Route::prefix('blog')->namespace('Blog')->name('blog.')->group(function () {
 
         //
-        Route::resource('post', 'PostController', ['except' => 'show']);
+        Route::resource('post', 'PostController');
         Route::resource('tag', 'TagController');
         Route::resource('upload', 'UploadController', ['only' => 'index']);
 

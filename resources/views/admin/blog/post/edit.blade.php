@@ -23,7 +23,6 @@
 
                         @include('admin.blog.partials.errors')
                         @include('admin.blog.partials.success')
-
                         <form role="form" method="POST" action="{{ route('admin.blog.post.update', $id) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="_method" value="PUT">

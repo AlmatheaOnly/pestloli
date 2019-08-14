@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as BaseController;
 use App\Models\Blog\Post;
 use Carbon\Carbon;
+use App\Services\Blog\PostService;
 
 class Controller extends BaseController
 {
@@ -14,13 +15,14 @@ class Controller extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $posts = Post::where('published_at', '<=', Carbon::now())
-            ->orderBy('published_at', 'desc')
-            ->paginate(config('blog.posts_per_page'));
-        return view ('blog.index', compact('posts'));
+        $tag = $request->get('tag');
+        $postService = new PostService($tag);
+        $data = $postService->lists();
+        $layout = $tag ? Tag::where('tag',$tag)->pluck('layout')->first() : 'blog.index';
+        return view ($layout, $data);
     }
 
     /**

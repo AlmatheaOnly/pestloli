@@ -24,6 +24,13 @@ class PostController extends Controller
         'tags' => [],
     ];
 
+    public function show($slug)
+    {
+        //
+        $post = Post::where('slug', $slug)->firstOrFail();
+        return view('blog.post', ['post' => $post]);
+    }
+
     /**
      * Display a listing of the posts.
      */
@@ -62,7 +69,7 @@ class PostController extends Controller
     public function store(PostCreateRequest $request)
     {
         $post = Post::create($request->postFillData());
-        $post->tags()->attach(Tag::whereIn('tag',$request->get('tags',[]))->get());
+        $post->tags()->attach(Tag::whereIn('tag',$request->get('tags',[])));
 
         return redirect()
             ->route('admin.blog.post.index')
@@ -103,8 +110,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->fill($request->postFillData());
         $post->save();
-        $post->syncTags($request->get('tags', []));
-
+       $post->tags()->sync(Tag::whereIn('tag',$request->get('tags',[]))->pluck('id')->all());
         if ($request->action === 'continue') {
             return redirect()
                 ->back()
@@ -112,7 +118,7 @@ class PostController extends Controller
         }
 
         return redirect()
-            ->route('post.index')
+            ->route('admin.blog.post.index')
             ->with('success', '文章已保存.');
     }
 
@@ -129,7 +135,7 @@ class PostController extends Controller
         $post->delete();
 
         return redirect()
-            ->route('post.index')
+            ->route('admin.blog.post.index')
             ->with('success', '文章已删除.');
     }
 

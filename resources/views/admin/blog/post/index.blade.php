@@ -7,7 +7,7 @@
                 <h3>文章 <small>» 列表</small></h3>
             </div>
             <div class="col-md-6 text-right">
-                <a href="{{url('admin/blog/post/create')}}" class="btn btn-success btn-md">
+                <a href="{{route('admin.blog.post.create')}}" class="btn btn-success btn-md">
                     <i class="fa fa-plus-circle"></i> 创建新文章
                 </a>
             </div>
@@ -37,10 +37,10 @@
                             <td>{{ $post->title }}</td>
                             <td>{{ $post->subtitle }}</td>
                             <td>
-                                <a href="{{url('admin/blog/post/'. $post->id .'/edit')}}" class="btn btn-xs btn-info">
+                                <a href="{{route('admin.blog.post.edit',$post->id)}}" class="btn btn-xs btn-info">
                                     <i class="fa fa-edit"></i> 编辑
                                 </a>
-                                <a href="{{url('blog/'. $post->slug)}}" class="btn btn-xs btn-warning">
+                                <a href="{{route('admin.blog.post.show',$post->slug)}}" class="btn btn-xs btn-warning">
                                     <i class="fa fa-eye"></i> 查看
                                 </a>
                             </td>

@@ -1,26 +1,76 @@
-<html>
-<head>
-    <title>{{ config('blog.title') }}</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-</head>
-<body>
-<div class="container">
-    <h1>{{ config('blog.title') }}</h1>
-    <h5>Page {{ $posts->currentPage() }} of {{ $posts->lastPage() }}</h5>
-    <hr>
-    <ul>
-        @foreach ($posts as $post)
-            <li>
-                <a href="{{ route('blog.detail', ['slug' => $post->slug]) }}">{{ $post->title }}</a>
-                <em>({{ $post->published_at }})</em>
-                <p>
-                    {{ str_limit($post->content) }}
-                </p>
-            </li>
-        @endforeach
-    </ul>
-    <hr>
-    {!! $posts->render() !!}
-</div>
-</body>
-</html>
+@extends('blog.layouts.app')
+@section('page-header')
+    <header class="masthead" style="background-image: url('image/a.jpg')">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="site-heading">
+                        <h1>{{ $title }}</h1>
+                        <span class="subheading">{{ $subtitle }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+@stop
+
+@section('content')
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                {{-- 文章列表 --}}
+                @foreach ($posts as $post)
+                    <div class="post-preview">
+                        <a href="{{ url('blog',$post->slug) }}">
+                            <h2 class="post-title">{{ $post->title }}</h2>
+                            @if ($post->subtitle)
+                                <h3 class="post-subtitle">{{ $post->subtitle }}</h3>
+                            @endif
+                        </a>
+                        <p class="post-meta">
+                            Posted on {{ $post->published_at->format('Y-m-d') }}
+                            @if ($post->tags->count())
+                                in
+                                {!! join(', ',$post->tags()->pluck('tag')->all()) !!}
+                            @endif
+                        </p>
+                    </div>
+                    <hr>
+                @endforeach
+
+                {{-- 分页 --}}
+                <div class="clearfix">
+                    {{-- Reverse direction --}}
+                    @if ($reverse_direction)
+                        @if ($posts->currentPage() > 1)
+                            <a class="btn btn-primary float-left" href="{!! $posts->url($posts->currentPage() - 1) !!}">
+                                ←
+                                Previous {{ $tag->tag }} Posts
+                            </a>
+                        @endif
+                        @if ($posts->hasMorePages())
+                            <a class="btn btn-primary float-right" ref="{!! $posts->nextPageUrl() !!}">
+                                Next {{ $tag->tag }} Posts
+                                →
+                            </a>
+                        @endif
+                    @else
+                        @if ($posts->currentPage() > 1)
+                            <a class="btn btn-primary float-left" href="{!! $posts->url($posts->currentPage() - 1) !!}">
+                                ←
+                                Newer {{ $tag ? $tag->tag : '' }} Posts
+                            </a>
+                        @endif
+                        @if ($posts->hasMorePages())
+                            <a class="btn btn-primary float-right" href="{!! $posts->nextPageUrl() !!}">
+                                Older {{ $tag ? $tag->tag : '' }} Posts
+                                →
+                            </a>
+                        @endif
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+@stop

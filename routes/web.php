@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::redirect('/','blog');
 
 Route::prefix('blog')->group(function () {
     Route::get('/', 'Blog\Controller@index')->name('blog.home');
