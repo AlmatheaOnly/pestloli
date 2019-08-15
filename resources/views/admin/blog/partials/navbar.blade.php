@@ -10,6 +10,9 @@
         <li @if (Request::is('admin/blog/upload*')) class="nav-item active" @else class="nav-item" @endif>
             <a class="nav-link" href="/admin/blog/upload">上传</a>
         </li>
+        <li @if (Request::is('admin/blog/config*')) class="nav-item active" @else class="nav-item" @endif>
+            <a class="nav-link" href="/admin/blog/config">配置</a>
+        </li>
     @endauth
 </ul>
 
