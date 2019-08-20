@@ -127,6 +127,7 @@
         // 预览图片
         function preview_image(path) {
             $("#preview-image").attr("src", path);
+            $("#preview-url").html(path);
             $("#modal-image-view").modal("show");
         }
 

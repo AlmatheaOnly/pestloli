@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWebGlobalConfigsTable extends Migration
+class CreateBlogGlobalConfigsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateWebGlobalConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('web_global_configs', function (Blueprint $table) {
+        Schema::create('blog_global_configs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('value');
+            $table->string('name')->nullable();
+            $table->string('value')->nullable();
+            $table->string('default')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateWebGlobalConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('web_global_configs');
+        Schema::dropIfExists('blog_global_configs');
     }
 }

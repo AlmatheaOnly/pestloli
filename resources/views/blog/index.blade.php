@@ -1,6 +1,6 @@
 @extends('blog.layouts.app')
 @section('page-header')
-    <header class="masthead" style="background-image: url('image/a.jpg')">
+    <header class="masthead" style="background-image: url({{$page_image}}) ">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
@@ -42,7 +42,7 @@
                 {{-- 分页 --}}
                 <div class="clearfix">
                     {{-- Reverse direction --}}
-                    @if ($reverse_direction)
+
                         @if ($posts->currentPage() > 1)
                             <a class="btn btn-primary float-left" href="{!! $posts->url($posts->currentPage() - 1) !!}">
                                 ←
@@ -55,20 +55,6 @@
                                 →
                             </a>
                         @endif
-                    @else
-                        @if ($posts->currentPage() > 1)
-                            <a class="btn btn-primary float-left" href="{!! $posts->url($posts->currentPage() - 1) !!}">
-                                ←
-                                Newer {{ $tag ? $tag->tag : '' }} Posts
-                            </a>
-                        @endif
-                        @if ($posts->hasMorePages())
-                            <a class="btn btn-primary float-right" href="{!! $posts->nextPageUrl() !!}">
-                                Older {{ $tag ? $tag->tag : '' }} Posts
-                                →
-                            </a>
-                        @endif
-                    @endif
                 </div>
             </div>
         </div>

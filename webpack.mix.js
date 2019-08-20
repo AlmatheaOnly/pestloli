@@ -33,3 +33,5 @@ mix.combine([
     'node_modules/pickadate/lib/compressed/picker.date.js',
     'node_modules/pickadate/lib/compressed/picker.time.js'
 ], 'public/js/pickadate.min.js');
+
+mix.copyDirectory('resources/lib/image-picker','public/lib/image-picker');

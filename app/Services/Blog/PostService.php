@@ -4,7 +4,9 @@ namespace App\Services\Blog;
 
 use Carbon\Carbon;
 use App\Models\Blog\Post;
-use Apa\Models\Blog\Tag;
+use App\Models\Blog\Tag;
+use App\Services\Blog\ConfigService;
+
 
 class PostService
 {
@@ -22,10 +24,18 @@ class PostService
 
     public function lists()
     {
-        if ($this->tag) {
-            return $this->tagIndexData($this->tag);
-        }
-        return $this->normalIndexData();
+        $posts = $this->normalIndexData();
+        $config = app()->make('Blog\Config');
+        $config->init();
+        $array = [
+            'title' => $config->get('title'),
+            'subtitle' => $config->get('subtitle'),
+            'posts' => $posts,
+            'page_image' =>$config->get('page_image'),
+            'meta_description' => $config->get('meta_describute'),
+            'tag' => null,
+        ];
+        return $array;
     }
 
     /**
@@ -35,22 +45,13 @@ class PostService
      */
     protected function normalIndexData()
     {
+
         $posts = Post::with('tags')
             ->where('published_at', '<=', Carbon::now())
             ->where('is_draft', 0)
             ->orderBy('published_at', 'desc')
             ->simplePaginate(config('blog.posts_per_page'));
-        $posts->withPath('blog');
-
-        return [
-            'title' => config('blog.title'),
-            'subtitle' => config('blog.subtitle'),
-            'posts' => $posts,
-            'page_image' => config('blog.page_image'),
-            'meta_description' => config('blog.description'),
-            'reverse_direction' => false,
-            'tag' => null,
-        ];
+        return  $posts;
     }
 
     /**
@@ -71,10 +72,10 @@ class PostService
             ->where('is_draft', 0)
             ->orderBy('published_at', $reverse_direction ? 'asc' : 'desc')
             ->simplePaginate(config('blog.posts_per_page'));
-        $posts->withPath('blog');
+
         $posts->appends('tag', $tag->tag);
 
-        $page_image = $tag->page_image ? : config('blog.page_image');
+        $page_image = $tag->page_image ?: config('blog.page_image');
 
         return [
             'title' => $tag->title,

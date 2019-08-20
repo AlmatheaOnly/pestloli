@@ -66,3 +66,4 @@
         </label>
     </div>
 </div>
+@include('admin.blog.tag._modals')

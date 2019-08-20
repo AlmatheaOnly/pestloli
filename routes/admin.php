@@ -29,6 +29,9 @@ Route::middleware('admin:admin')->group(function () {
         Route::resource('post', 'PostController');
         Route::resource('tag', 'TagController');
         Route::resource('upload', 'UploadController', ['only' => 'index']);
+        Route::resource('config', 'DashboardController', ['only'=>'index']);
+        Route::get('config/ajax/index', 'DashboardController@ajaxIndex')->name('config.ajax.index');
+        Route::post('config/ajax/update', 'DashboardController@ajaxUpdate')->name('config.ajax.update');
 
 
         //文件操作

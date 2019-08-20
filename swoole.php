@@ -36,11 +36,6 @@ $serv->start();
 //SIGUSR1 安全终止主进程
 */
 
-require __DIR__.'/vendor/autoload.php';
-$app = require_once __DIR__.'/bootstrap/app.php';
-
-
-
 
 $serv = new Swoole\WebSocket\Server('0.0.0.0',3000);
 

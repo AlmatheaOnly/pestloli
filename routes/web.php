@@ -16,3 +16,7 @@ Route::prefix('blog')->group(function () {
     Route::get('/', 'Blog\Controller@index')->name('blog.home');
     Route::get('{slug}', 'Blog\PostController@show')->name('blog.detail');
 });
+Route::get('test',function(){
+    $instance = app()->make('Blog\Config');
+    return $instance->getPageImage();
+});
