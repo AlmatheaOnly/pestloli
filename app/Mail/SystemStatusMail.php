@@ -28,7 +28,9 @@ class SystemStatusMail extends Mailable
      */
     public function build()
     {
-    return $this->from('pest@pestloli.com')->subject('系统状态')->html('ninhao');
+        $html = "系统正常运行中 汇报时间".date('Y年m月d日 H点i分s秒');
+
+    return $this->from('pest@pestloli.com')->subject('pestloli')->html($html);
         //return $this->view('view.name');
     }
 }

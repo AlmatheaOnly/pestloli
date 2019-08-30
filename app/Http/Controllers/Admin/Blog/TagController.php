@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog\Tag;
 use App\Http\Requests\Blog\TagCreateRequest;
 use App\Http\Requests\Blog\TagUpdateRequest;
+use App\Http\Responses\JsonResponse;
 
 class TagController extends Controller
 {
@@ -29,6 +30,7 @@ class TagController extends Controller
     {
         $tags = Tag::all();
         return view('admin.blog.tag.index', compact('tags'));
+
     }
 
     /**
@@ -134,5 +136,12 @@ class TagController extends Controller
 
         return redirect('/admin/blog/tag')
             ->with('success', '标签「' . $tag->tag . '」已经被删除.');
+    }
+
+    public function ajaxIndex()
+    {
+        $tags = Tag::all();
+        return JsonResponse::Success('全部标签列表', $tags->toArray());
+
     }
 }

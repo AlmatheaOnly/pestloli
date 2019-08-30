@@ -1,10 +1,12 @@
 @extends('admin.blog.layouts.dashboard')
 
 @section('content')
-    <div class="container">
+    <div class="container" id="app">
         <div class="row page-title-row">
             <div class="col-md-6">
-                <h3>文章 <small>» 列表</small></h3>
+                <h3>文章
+                    <small>» 列表</small>
+                </h3>
             </div>
             <div class="col-md-6 text-right">
                 <a href="{{route('admin.blog.post.create')}}" class="btn btn-success btn-md">
@@ -15,9 +17,9 @@
 
         <div class="row">
             <div class="col-sm-12">
+                <requireSuccess v-if="status == 'success'"></requireSuccess>
+                <requireError v-if="status == 'error'"></requireError>
 
-                @include('admin.blog.partials.errors')
-                @include('admin.blog.partials.success')
 
                 <table id="posts-table" class="table table-striped table-bordered">
                     <thead>
@@ -56,10 +58,11 @@
 
 @section('scripts')
     <script>
-        $(function() {
-            $("#posts-table").DataTable({
-                order: [[0, "desc"]]
-            });
+        const app = new Vue({
+            el: "#app",
+            data:{
+                status:"",
+            },
         });
     </script>
 @stop

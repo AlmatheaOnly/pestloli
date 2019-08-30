@@ -6,9 +6,10 @@ use Carbon\Carbon;
 use App\Models\Blog\Post;
 use App\Models\Blog\Tag;
 use App\Services\Blog\ConfigService;
+use App\Contract\UseCache;
 
 
-class PostService
+class PostService implements UseCache
 {
     protected $tag;
 
@@ -17,75 +18,42 @@ class PostService
      *
      * @param string|null $tag
      */
-    public function __construct($tag)
+    public function __construct()
     {
-        $this->tag = $tag;
+
     }
 
-    public function lists()
+    public function init()
     {
-        $posts = $this->normalIndexData();
-        $config = app()->make('Blog\Config');
-        $config->init();
-        $array = [
-            'title' => $config->get('title'),
-            'subtitle' => $config->get('subtitle'),
-            'posts' => $posts,
-            'page_image' =>$config->get('page_image'),
-            'meta_description' => $config->get('meta_describute'),
-            'tag' => null,
-        ];
-        return $array;
+        return $this;
     }
 
-    /**
-     * Return data for normal index page
-     *
-     * @return array
-     */
-    protected function normalIndexData()
+    public function get($id)
     {
+        return Post::where('id', $id)->first();
+    }
 
+    public function set($id, $data)
+    {
+        return Post::firstOrCreate(
+            ['id' => $id],
+            $data
+        );
+    }
+
+
+
+    public function postList()
+    {
         $posts = Post::with('tags')
-            ->where('published_at', '<=', Carbon::now())
-            ->where('is_draft', 0)
             ->orderBy('published_at', 'desc')
+            ->limit('20')
             ->simplePaginate(config('blog.posts_per_page'));
-        return  $posts;
+        return $posts;
     }
 
-    /**
-     * Return data for a tag index page
-     *
-     * @param string $tag
-     * @return array
-     */
-    protected function tagIndexData($tag)
+    public function cachePrefix()
     {
-        $tag = Tag::where('tag', $tag)->firstOrFail();
-        $reverse_direction = (bool)$tag->reverse_direction;
-
-        $posts = Post::where('published_at', '<=', Carbon::now())
-            ->whereHas('tags', function ($q) use ($tag) {
-                $q->where('tag', '=', $tag->tag);
-            })
-            ->where('is_draft', 0)
-            ->orderBy('published_at', $reverse_direction ? 'asc' : 'desc')
-            ->simplePaginate(config('blog.posts_per_page'));
-
-        $posts->appends('tag', $tag->tag);
-
-        $page_image = $tag->page_image ?: config('blog.page_image');
-
-        return [
-            'title' => $tag->title,
-            'subtitle' => $tag->subtitle,
-            'posts' => $posts,
-            'page_image' => $page_image,
-            'tag' => $tag,
-            'reverse_direction' => $reverse_direction,
-            'meta_description' => $tag->meta_description ?: config('blog.description'),
-        ];
+        return "blog_post";
     }
-
 }

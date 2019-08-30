@@ -22,7 +22,7 @@
                 {{-- 文章列表 --}}
                 @foreach ($posts as $post)
                     <div class="post-preview">
-                        <a href="{{ url('blog',$post->slug) }}">
+                        <a href="{{ route('blog.post.show',$post->id) }}">
                             <h2 class="post-title">{{ $post->title }}</h2>
                             @if ($post->subtitle)
                                 <h3 class="post-subtitle">{{ $post->subtitle }}</h3>
@@ -38,24 +38,6 @@
                     </div>
                     <hr>
                 @endforeach
-
-                {{-- 分页 --}}
-                <div class="clearfix">
-                    {{-- Reverse direction --}}
-
-                        @if ($posts->currentPage() > 1)
-                            <a class="btn btn-primary float-left" href="{!! $posts->url($posts->currentPage() - 1) !!}">
-                                ←
-                                Previous {{ $tag->tag }} Posts
-                            </a>
-                        @endif
-                        @if ($posts->hasMorePages())
-                            <a class="btn btn-primary float-right" ref="{!! $posts->nextPageUrl() !!}">
-                                Next {{ $tag->tag }} Posts
-                                →
-                            </a>
-                        @endif
-                </div>
             </div>
         </div>
     </div>

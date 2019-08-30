@@ -8,7 +8,7 @@
 
     <title>{{ config('blog.title') }} 管理后台</title>
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
     @yield('styles')
 
 </head>
@@ -32,7 +32,7 @@
 <main class="py-4">
     @yield('content')
 </main>
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/admin.js') }}"></script>
 @yield('scripts')
 </body>
 </html>

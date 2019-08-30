@@ -34,4 +34,9 @@ class SendMailJob implements ShouldQueue
         //
         Mail::to('386474290@qq.com')->send(new SystemStatusMail());
     }
+
+    public function failed(Exception $exception)
+    {
+        DB::table('failed_jobs')->insert(['connection' => 'redis', 'queue' => 'default', 'payload' => now(), 'exception' => $exception, 'failed_at' => now()]);
+    }
 }

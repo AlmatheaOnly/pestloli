@@ -10,13 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::redirect('','blog');
+Route::redirect('', 'blog/post');
 
-Route::prefix('blog')->group(function () {
-    Route::get('/', 'Blog\Controller@index')->name('blog.home');
-    Route::get('{slug}', 'Blog\PostController@show')->name('blog.detail');
-});
-Route::get('test',function(){
-    $instance = app()->make('Blog\Config');
-    return $instance->getPageImage();
+Route::namespace('Blog')->prefix('blog')->name('blog.')->group(function () {
+    Route::resource('post', 'PostController');
+    Route::get('test','PostController@test');
 });

@@ -5,7 +5,17 @@
                 标题
             </label>
             <div class="col-md-10">
-                <input type="text" class="form-control" name="title" autofocus id="title" value="{{ $title }}">
+                <input v-model="list.title" type="text" class="form-control" name="title" autofocus id="title"
+                       value="{{ $title }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="slug" class="col-md-2 col-form-label">
+                seo
+            </label>
+            <div class="col-md-10">
+                <input v-model="list.slug" type="text" class="form-control" name="slug" autofocus id="slug"
+                       value="{{ $slug }}">
             </div>
         </div>
         <div class="form-group row">
@@ -13,7 +23,8 @@
                 副标题
             </label>
             <div class="col-md-10">
-                <input type="text" class="form-control" name="subtitle" id="subtitle" value="{{ $subtitle }}">
+                <input v-model="list.subtitle" type="text" class="form-control" name="subtitle" id="subtitle"
+                       value="{{ $subtitle }}">
             </div>
         </div>
         <div class="form-group row">
@@ -23,28 +34,13 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="page_image" id="page_image" onchange="handle_image_change()" alt="Image thumbnail" value="{{ $page_image }}">
+                        <input v-model="list.page_image" type="text" class="form-control" name="page_image"
+                               id="page_image"
+                               alt="Image thumbnail" value="{{ $page_image }}">
                     </div>
-                    <script>
-                        function handle_image_change() {
-                            $("#page-image-preview").attr("src", function () {
-                                var value = $("#page_image").val();
-                                if ( ! value) {
-                                    value = {!! json_encode(config('blog.page_image')) !!};
-                                    if (value == null) {
-                                        value = '';
-                                    }
-                                }
-                                if (value.substr(0, 4) != 'http' && value.substr(0, 1) != '/') {
-                                    value = {!! json_encode(config('blog.uploads.webpath')) !!} + '/' + value;
-                                }
-                                return value;
-                            });
-                        }
-                    </script>
                     <div class="visible-sm space-10"></div>
                     <div class="col-md-4 text-right">
-                        <img src="{{ page_image($page_image) }}" class="img img_responsive" id="page-image-preview" style="max-height:40px">
+                        <img src="" class="img img_responsive" id="page-image-preview" style="max-height:40px">
                     </div>
                 </div>
             </div>
@@ -54,65 +50,69 @@
                 内容
             </label>
             <div class="col-md-10">
-                <textarea class="form-control" name="content" rows="14" id="content">{{ $content }}</textarea>
+                <textarea v-model="list.content" class="form-control" name="content" rows="14"
+                          id="content">{{ $content }}</textarea>
             </div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group row">
-            <label for="publish_date" class="col-md-3 col-form-label">
+            <label for="publish_date" class="col-md-8 col-form-label">
                 发布日期
             </label>
             <div class="col-md-8">
-                <input class="form-control" name="publish_date" id="publish_date" type="text" value="{{ $publish_date }}">
+                <input v-model="list.publish_date" class="form-control" name="publish_date" id="publish_date"
+                       type="text"
+                       value="{{ $publish_date }}">
             </div>
         </div>
         <div class="form-group row">
-            <label for="publish_time" class="col-md-3 col-form-label">
+            <label for="publish_time" class="col-md-8 col-form-label">
                 发布时间
             </label>
             <div class="col-md-8">
-                <input class="form-control" name="publish_time" id="publish_time" type="text" value="{{ $publish_time }}">
+                <input v-model="list.publish_time" class="form-control" name="publish_time" id="publish_time"
+                       type="text"
+                       value="{{ $publish_time }}">
             </div>
         </div>
         <div class="form-group row">
             <div class="col-md-8 col-md-offset-3">
                 <div class="checkbox">
                     <label>
-                        <input {{ checked($is_draft) }} type="checkbox" name="is_draft">
+                        <input v-model="list.is_draft" {{ checked($is_draft) }} type="checkbox" name="is_draft">
                         草稿?
                     </label>
                 </div>
             </div>
         </div>
         <div class="form-group row">
-            <label for="tags" class="col-md-3 col-form-label">
+            <label for="tags" class="col-md-8 col-form-label">
                 标签
             </label>
             <div class="col-md-8">
-                <select name="tags[]" id="tags" class="form-control" multiple>
-                    @foreach ($allTags as $tag)
-                        <option @if (in_array($tag, $tags)) selected @endif value="{{ $tag }}">
-                            {{ $tag }}
-                        </option>
-                    @endforeach
+                <select v-model="list.tags" name="tags[]" id="tags" class="form-control" multiple>
+                    <option v-for="tag in tags.data" v-bind:value="tag.id"> @{{ tag.tag }} </option>
                 </select>
             </div>
         </div>
         <div class="form-group row">
-            <label for="layout" class="col-md-3 col-form-label">
+            <label for="layout" class="col-md-8 col-form-label">
                 布局
             </label>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="layout" id="layout" value="{{ $layout }}">
+                <input v-model="list.layout" type="text" class="form-control" name="layout" id="layout"
+                       value="{{ $layout }}">
             </div>
         </div>
         <div class="form-group row">
-            <label for="meta_description" class="col-md-3 col-form-label">
+            <label for="meta_description" class="col-md-8 col-form-label">
                 摘要
             </label>
             <div class="col-md-8">
-                <textarea class="form-control" name="meta_description" id="meta_description" rows="6">{{ $meta_description }}</textarea>
+                <textarea v-model="list.meta_description" class="form-control" name="meta_description"
+                          id="meta_description"
+                          rows="6">{{ $meta_description }}</textarea>
             </div>
         </div>
 

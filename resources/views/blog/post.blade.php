@@ -1,10 +1,7 @@
-@extends('blog.layouts.app', [
-  'title' => $post->title,
-  'meta_description' => $post->meta_description ?? config('blog.description'),
-])
+@extends('blog.layouts.app')
 
 @section('page-header')
-    <header class="masthead" style="background-image: url('{{ page_image($post->page_image) }}')">
+    <header class="masthead" style="background-image: url('{{$post->page_image}}')">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
@@ -16,7 +13,7 @@
                             Posted on {{ $post->published_at->format('Y-m-d') }}
                             @if ($post->tags->count())
                                 in
-                                {!! join(', ', []) !!}
+                                {!! join(', ', $tags) !!}
                             @endif
                         </span>
                     </div>
@@ -37,22 +34,24 @@
                 </article>
 
                 <hr>
+                <!--
                 {{-- 上一篇、下一篇导航 --}}
                 <div class="clearfix">
                     {{-- Reverse direction --}}
-                        @if ($post->olderPost($tag))
-                            <a class="btn btn-primary float-left" href="{!! url('blog',$post->olderPost($tag)) !!}">
-                                ←
-                                Previous {{ $tag->tag }} Post
-                            </a>
-                        @endif
-                        @if ($post->newerPost($tag))
-                            <a class="btn btn-primary float-right" href="{!! url('blog',$post->newerPost($tag)) !!}">
-                                Next {{ $tag->tag }} Post
-                                →
-                            </a>
-                        @endif
+
+                    <a class="btn btn-primary float-left" href="">
+                        ←
+                        Previous Post
+                    </a>
+
+
+                    <a class="btn btn-primary float-right" href="">
+                        Next Post
+                        →
+                    </a>
+
                 </div>
+                -->
             </div>
         </div>
     </div>

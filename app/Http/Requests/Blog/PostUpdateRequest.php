@@ -24,7 +24,13 @@ class PostUpdateRequest extends PostCreateRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required',
+            'slug' => 'required',
+            'subtitle' => 'required',
+            'content' => 'required',
+            'publish_date' => 'required',
+            'publish_time' => 'required',
+            'layout' => 'required',
         ];
     }
 }

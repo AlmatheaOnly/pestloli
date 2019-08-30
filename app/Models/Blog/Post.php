@@ -35,10 +35,11 @@ class Post extends Model
     //
     protected $dates = ['published_at'];
     protected $fillable = [
-        'title', 'subtitle', 'content_raw', 'page_image', 'meta_description','layout', 'is_draft', 'published_at',
+        'id', 'title', 'slug', 'subtitle', 'content_raw', 'page_image', 'meta_description', 'layout', 'is_draft', 'published_at',
     ];
 
-    public function tags(){
+    public function tags()
+    {
         return $this->belongsToMany(Tag::class, 'tag_post_pivots');
     }
 
@@ -46,24 +47,8 @@ class Post extends Model
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = $value;
-
-        if (!$this->exists) {
-            $value = uniqid(str_random(8));
-            $this->setUniqueSlug($value, 0);
-        }
     }
 
-    protected function setUniqueSlug($title, $extra)
-    {
-        $slug = str_slug($title . '-' . $extra);
-
-        if (static::where('slug', $slug)->exists()) {
-            $this->setUniqueSlug($title, $extra + 1);
-            return;
-        }
-
-        $this->attributes['slug'] = $slug;
-    }
 
     /**
      * Set the HTML content automatically when the raw content is set
@@ -105,43 +90,5 @@ class Post extends Model
     {
         return $this->content_raw;
     }
-
-    public function newerPost(Tag $tag = null)
-    {
-        $query =
-            static::where('published_at', '>', $this->published_at)
-                ->where('published_at', '<=', Carbon::now())
-                ->where('is_draft', 0)
-                ->orderBy('published_at', 'asc');
-        if ($tag) {
-            $query = $query->whereHas('tags', function ($q) use ($tag) {
-                $q->where('tag', '=', $tag->tag);
-            });
-        }
-
-        return $query->first();
-    }
-
-    /**
-     * Return older post before this one or null
-     *
-     * @param Tag $tag
-     * @return Post
-     */
-    public function olderPost(Tag $tag = null)
-    {
-        $query =
-            static::where('published_at', '<', $this->published_at)
-                ->where('is_draft', 0)
-                ->orderBy('published_at', 'desc');
-        if ($tag) {
-            $query = $query->whereHas('tags', function ($q) use ($tag) {
-                $q->where('tag', '=', $tag->tag);
-            });
-        }
-
-        return $query->first();
-    }
-
 
 }

@@ -14,6 +14,14 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css');
 
+mix.js('resources/js/admin.js', 'public/js')
+    .sass('resources/sass/admin.scss', 'public/css');
+
+
+mix.sass('resources/sass/blog.scss', 'public/css')
+    .js('resources/js/blog.js', 'public/js')
+
+
 mix.combine([
     'node_modules/selectize/dist/css/selectize.css',
     'node_modules/selectize/dist/css/selectize.bootstrap3.css'
@@ -25,13 +33,13 @@ mix.combine([
     'node_modules/pickadate/lib/compressed/themes/default.time.css',
 ], 'public/css/pickadate.min.css');
 
+
 mix.copy('node_modules/selectize/dist/js/standalone/selectize.min.js',
     'public/js/selectize.min.js');
+
 
 mix.combine([
     'node_modules/pickadate/lib/compressed/picker.js',
     'node_modules/pickadate/lib/compressed/picker.date.js',
     'node_modules/pickadate/lib/compressed/picker.time.js'
 ], 'public/js/pickadate.min.js');
-
-mix.copyDirectory('resources/lib/image-picker','public/lib/image-picker');

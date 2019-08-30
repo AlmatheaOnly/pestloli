@@ -2,27 +2,32 @@
 
 namespace App\Services\Blog\Cache;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use App\Contract\UseCache;
 
-class ConfigService
+class CacheService
 {
-    private $cachePrefix = 'blog_config';
+    private $cachePrefix = '';
 
-    public function __construct($newInstance)
+    public function __construct(UseCache $newInstance)
     {
         //
         $this->newInstance = $newInstance;
-    }
+        $this->cachePrefix = $this->newInstance->cachePrefix();
 
+    }
+    public function init()
+    {
+        return $this;
+    }
     public function __call($name, $arguments)
     {
         if ($name == 'get') {
+
             if (Redis::hexists($this->cachePrefix, $arguments[0])) {
                 return Redis::hget($this->cachePrefix, $arguments[0]);
             } else {
-                $reflect = new \ReflectionMethod($this->newInstance, $name);
-                $value = $reflect->invoke($this->newInstance->init(), $arguments[0]);
+                $value = $this->newInstance->init()->get($arguments[0]);
                 Redis::hset($this->cachePrefix, $arguments[0], $value);
                 return $value;
             }
@@ -35,10 +40,7 @@ class ConfigService
             return false;
         }
         // TODO: Implement __call() method.
-    }
-
-    public function init()
-    {
-        return $this;
+        $method = new\ReflectionMethod($this->newInstance,$name);
+        return $method->invokeArgs($this->newInstance,$arguments);
     }
 }

@@ -17,9 +17,17 @@ class BlogServiceProvider extends ServiceProvider
         $this->app->singleton('Blog\Config', function ($app) {
             return new \App\Services\Blog\ConfigService();
         });
-
         $this->app->extend('Blog\Config', function ($newInstance) {
-            return new \App\Services\Blog\Cache\ConfigService($newInstance);
+            return new \App\Services\Blog\Cache\CacheService($newInstance);
+        });
+
+
+
+        $this->app->singleton('Blog\Post', function ($app) {
+            return new \App\Services\Blog\PostService();
+        });
+        $this->app->extend('Blog\Post', function ($newInstance) {
+            return new \App\Services\Blog\Cache\CacheService($newInstance);
         });
     }
 

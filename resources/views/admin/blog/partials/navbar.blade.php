@@ -27,7 +27,11 @@
                 <span class="caret"></span>
             </a>
             <div class="dropdown-menu" role="menu">
-                <a class="dropdown-item" href="admin/logout">退出</a>
+                <a class="dropdown-item" href="{{ route('admin.logout') }}"
+                   onclick="event.preventDefault();document.getElementById('logout').submit();">退出</a>
+                <form role="form" id="logout" method="POST" action="{{ url('admin/logout') }}" sytle="display:none">
+                    @csrf
+                </form>
             </div>
         </li>
     @endguest

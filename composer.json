@@ -12,6 +12,7 @@
         "dflydev/apache-mime-types": "^1.0",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
+        "hhxsv5/laravel-s": "^3.5",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "menthe/aliyun-ueditor": "^0.1.6",

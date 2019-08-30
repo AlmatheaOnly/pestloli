@@ -9,10 +9,14 @@ use App\Models\Blog\Tag;
 use Carbon\Carbon;
 use App\Http\Requests\Blog\PostUpdateRequest;
 use App\Http\Requests\Blog\PostCreateRequest;
+use App\Http\Responses\JsonResponse;
+use Illuminate\Support\Facades\DB;
+
 class PostController extends Controller
 {
     protected $fieldList = [
         'title' => '',
+        'slug' => '',
         'subtitle' => '',
         'page_image' => '',
         'content' => '',
@@ -20,7 +24,7 @@ class PostController extends Controller
         'is_draft' => "0",
         'publish_date' => '',
         'publish_time' => '',
-        'layout' => 'blog.layouts.post',
+        'layout' => '',
         'tags' => [],
     ];
 
@@ -39,6 +43,9 @@ class PostController extends Controller
         return view('admin.blog.post.index', ['posts' => Post::all()]);
     }
 
+    public function ajaxIndex(){
+        return Post::all();
+    }
     /**
      * Show the new post form
      */
@@ -47,7 +54,7 @@ class PostController extends Controller
         $fields = $this->fieldList;
         $when = Carbon::now()->addHour();
         $fields['publish_date'] = $when->format('Y-m-d');
-        $fields['publish_time'] = $when->format('g:i A');
+        $fields['publish_time'] = $when->format('h:s:i');
 
         foreach ($fields as $fieldName => $fieldValue) {
             $fields[$fieldName] = old($fieldName, $fieldValue);
@@ -68,12 +75,17 @@ class PostController extends Controller
      */
     public function store(PostCreateRequest $request)
     {
-        $post = Post::create($request->postFillData());
-        $post->tags()->attach(Tag::whereIn('tag',$request->get('tags',[])));
+        DB::beginTransaction();
+        try {
+            $post = Post::create($request->postFillData());
+            $post->tags()->attach($request->get('tags', []));
+        } catch (\Exception $errors) {
+            DB::rollBack();
+            return JsonResponse::Failed('新文章创建失败');
 
-        return redirect()
-            ->route('admin.blog.post.index')
-            ->with('success', '新文章创建成功.');
+        }
+        DB::commit();
+        return JsonResponse::Success('新文章创建成功');
     }
 
     /**
@@ -110,7 +122,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->fill($request->postFillData());
         $post->save();
-       $post->tags()->sync(Tag::whereIn('tag',$request->get('tags',[]))->pluck('id')->all());
+        $post->tags()->sync(Tag::whereIn('tag', $request->get('tags', []))->pluck('id')->all());
         if ($request->action === 'continue') {
             return redirect()
                 ->back()

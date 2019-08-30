@@ -5,16 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="{{ $meta_description }}">
-    <meta name="author" content="{{ config('blog.author') }}">
+    <meta name="author" content="{{ $author }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('blog.title') }}</title>
+    <title>{{ $title }}</title>
 
     {{-- Styles --}}
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/blog.css') }}" rel="stylesheet">
     @yield('styles')
 </head>
-<body>
+<body id="app">
 @include('blog.partials.nav')
 
 @yield('page-header')
@@ -24,7 +24,7 @@
 @include('blog.partials.footer')
 
 {{-- Scripts --}}
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/blog.js') }}"></script>
 @yield('scripts')
 </body>
 </html>

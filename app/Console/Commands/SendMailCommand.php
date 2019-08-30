@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\SystemStatusMail;
+use Illuminate\Support\Facades\Mail;
 
 class SendMailCommand extends Command
 {
@@ -40,7 +40,6 @@ class SendMailCommand extends Command
     public function handle()
     {
         //
-
         \App\Jobs\SendMailJob::dispatch();
     }
 }

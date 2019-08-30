@@ -1,6 +1,10 @@
 {
+    "/js/admin.js": "/js/admin.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
+    "/css/admin.css": "/css/admin.css",
+    "/css/blog.css": "/css/blog.css",
+    "/js/blog.js": "/js/blog.js",
     "/css/selectize.default.css": "/css/selectize.default.css",
     "/css/pickadate.min.css": "/css/pickadate.min.css",
     "/js/selectize.min.js": "/js/selectize.min.js",
